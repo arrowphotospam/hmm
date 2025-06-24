@@ -1,0 +1,126 @@
+using System;
+using System.Collections.Generic;
+
+namespace dotnetapp
+{
+    public class Contact
+    {
+        public int ContactId { get; set; }
+        public string Name { get; set; }
+        public int Age { get; set; }
+        public string Gender { get; set; }
+        public string PhoneNumber { get; set; }
+        public string Email { get; set; }
+
+        public Contact()
+        {
+            Name = "";
+            Gender = "";
+        }
+
+        public void DisplayContactDetails()
+        {
+            Console.WriteLine($"Contact ID: {ContactId}, Name: {Name}, Age: {Age}, Gender: {Gender}, Phone Number: {PhoneNumber}, Email: {Email}");
+        }
+    }
+
+    public class ContactManager
+    {
+        public List<Contact> contacts = new List<Contact>();
+
+        public void AddContact(Contact contact)
+        {
+            bool exists = contacts.Exists(c => c.ContactId == contact.ContactId);
+            if (exists)
+            {
+                Console.WriteLine($"A contact with ID {contact.ContactId} already exists.");
+                return;
+            }
+
+            contacts.Add(contact);
+            Console.WriteLine("Contact added successfully.");
+        }
+
+        public void DisplayContacts()
+        {
+            if (contacts.Count == 0)
+            {
+                Console.WriteLine("No contacts available.");
+                return;
+            }
+
+            Console.WriteLine("Contact List:");
+            foreach (Contact c in contacts)
+            {
+                c.DisplayContactDetails();
+            }
+        }
+    }
+
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            ContactManager manager = new ContactManager();
+            while (true)
+            {
+                Console.WriteLine("1 - Add Contact");
+                Console.WriteLine("2 - Display Contacts");
+                Console.WriteLine("3 - Exit");
+                string choice = Console.ReadLine();
+
+                if (choice == "1")
+                {
+                    try
+                    {
+                        Contact contact = new Contact();
+                        Console.Write("Enter Contact ID: ");
+                        contact.ContactId = int.Parse(Console.ReadLine());
+
+                        Console.Write("Enter Name: ");
+                        contact.Name = Console.ReadLine();
+
+                        Console.Write("Enter Age: ");
+                        contact.Age = int.Parse(Console.ReadLine());
+
+                        Console.Write("Enter Gender: ");
+                        contact.Gender = Console.ReadLine();
+
+                        Console.Write("Enter Phone Number: ");
+                        contact.PhoneNumber = Console.ReadLine();
+
+                        Console.Write("Enter Email: ");
+                        contact.Email = Console.ReadLine();
+
+                        if (string.IsNullOrWhiteSpace(contact.Name) || string.IsNullOrWhiteSpace(contact.Gender)
+                            || string.IsNullOrWhiteSpace(contact.PhoneNumber) || string.IsNullOrWhiteSpace(contact.Email))
+                        {
+                            Console.WriteLine("Error: All fields must be filled.");
+                        }
+                        else
+                        {
+                            manager.AddContact(contact);
+                        }
+                    }
+                    catch
+                    {
+                        Console.WriteLine("Error: Invalid input.");
+                    }
+                }
+                else if (choice == "2")
+                {
+                    manager.DisplayContacts();
+                }
+                else if (choice == "3")
+                {
+                    Console.WriteLine("Exiting program...");
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine("Invalid choice, please try again.");
+                }
+            }
+        }
+    }
+}
